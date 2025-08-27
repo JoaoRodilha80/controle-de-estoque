@@ -1,1 +1,1 @@
-web: gunicorn GerenciadorTI.wsgi --log-file - --bind 0.0.0.0:$PORT
+web: gunicorn GerenciadorTI.wsgi --bind 0.0.0.0:$PORT
