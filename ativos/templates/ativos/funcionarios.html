@@ -1,0 +1,50 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h2 class="mb-4 d-flex justify-content-between align-items-center">
+        Funcionários
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adicionarFuncionarioModal">
+            Adicionar Funcionário
+        </button>
+    </h2>
+    <div class="list-group">
+        {% for funcionario in funcionarios %}
+            <a href="{% url 'editar_funcionario' funcionario.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ funcionario.nome }}</strong><br>
+                    <small class="text-muted">{{ funcionario.email }}</small>
+                </div>
+                <span class="badge bg-primary rounded-pill">Editar</span>
+            </a>
+        {% empty %}
+            <p class="text-muted">Nenhum funcionário cadastrado.</p>
+        {% endfor %}
+    </div>
+
+    <div class="modal fade" id="adicionarFuncionarioModal" tabindex="-1" aria-labelledby="adicionarFuncionarioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'adicionar_funcionario' %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="adicionarFuncionarioModalLabel">Adicionar Novo Funcionário</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome:</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

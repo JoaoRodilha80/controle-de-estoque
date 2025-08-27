@@ -1,0 +1,18 @@
+{% extends 'home.html' %}
+{% block content %}
+    <div class="card p-4">
+        <h2 class="mb-4">Editar Funcionário</h2>
+        <form action="{% url 'editar_funcionario' funcionario.id %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" id="nome" name="nome" value="{{ funcionario.nome }}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" value="{{ funcionario.email }}" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg">Salvar Alterações</button>
+        </form>
+    </div>
+{% endblock %}

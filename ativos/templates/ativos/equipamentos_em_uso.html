@@ -1,0 +1,23 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h2 class="mb-4">Equipamentos em Uso</h2>
+
+    {% for categoria_nome, equipamentos_lista in categorias.items %}
+        <h3 class="mt-4">{{ categoria_nome }}</h3>
+        <div class="list-group scrollable-list">
+            {% for equipamento in equipamentos_lista %}
+                <div class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ equipamento.nome }}</strong> - <small class="text-muted">N/S: {{ equipamento.numero_serie }}</small><br>
+                        <span class="text-primary">Assinado para:</span> {{ equipamento.funcionario.nome }} ({{ equipamento.funcionario.email }})
+                    </div>
+                    <div>
+                        <a href="{% url 'desassinalar_equipamento' equipamento.id %}" class="btn btn-danger btn-sm">Desassinalar</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">Nenhum equipamento em uso nesta categoria.</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

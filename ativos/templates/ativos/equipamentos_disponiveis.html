@@ -1,0 +1,85 @@
+{% extends 'home.html' %}
+{% block content %}
+    <h2 class="mb-4 d-flex justify-content-between align-items-center">
+        Equipamentos Disponíveis
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adicionarEquipamentoModal">
+            Adicionar Equipamento
+        </button>
+    </h2>
+
+    {% for categoria_nome, equipamentos_lista in categorias.items %}
+        <h3 class="mt-4">{{ categoria_nome }}</h3>
+        <div class="list-group scrollable-list">
+            {% for equipamento in equipamentos_lista %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ equipamento.nome }}</strong><br>
+                        <small class="text-muted">Número de Série: {{ equipamento.numero_serie }}</small>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-success btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Opções
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="p-3">
+                                <form action="{% url 'assinalar_equipamento' equipamento.id %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-2">
+                                        <label for="id_funcionario" class="form-label">Assinalar para:</label>
+                                        <select class="form-select" name="funcionario_id" id="id_funcionario">
+                                            {% for funcionario in funcionarios %}
+                                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
+                                            {% empty %}
+                                                <option value="">Nenhum funcionário cadastrado</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 btn-lg">Assinalar</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">Nenhum equipamento disponível nesta categoria.</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    
+    <div class="modal fade" id="adicionarEquipamentoModal" tabindex="-1" aria-labelledby="adicionarEquipamentoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{% url 'adicionar_equipamento' %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="adicionarEquipamentoModalLabel">Adicionar Novo Equipamento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome:</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="numero_serie" class="form-label">Número de Série:</label>
+                            <input type="text" class="form-control" id="numero_serie" name="numero_serie" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoria:</label>
+                            <select class="form-select" id="categoria" name="categoria" required>
+                                <option value="Perifericos">Periféricos</option>
+                                <option value="Maquinas">Máquinas</option>
+                                <option value="Monitores">Monitores</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
