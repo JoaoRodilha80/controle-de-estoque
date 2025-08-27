@@ -1,12 +1,20 @@
 import os
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'sua_chave_secreta_aqui'
+SECRET_KEY = 'django-insecure-86&8r@z5-2a2%t-^o(q*8z7p@32+1!6$r-^@7*3a^@$t-!@7*3a^@$t-!@7'
 
+# IMPORTANTE: Mantenha DEBUG=True para ambiente de desenvolvimento.
+# No Render, você irá querer mudar para DEBUG=False em produção.
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# ADICIONADO PARA O RENDER
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,18 +56,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'GerenciadorTI.wsgi.application'
 
+# AJUSTADO PARA O RENDER
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 LANGUAGE_CODE = 'pt-br'
@@ -68,8 +87,11 @@ TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
-STATIC_URL = '/static/'
+# AJUSTADO PARA O RENDER
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
