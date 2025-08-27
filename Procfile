@@ -1,0 +1,1 @@
+web: gunicorn GerenciadorTI.wsgi --log-file -
